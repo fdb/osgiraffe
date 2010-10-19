@@ -1,0 +1,24 @@
+OSGiraffe
+=========
+OSGiraffe is a demo application that shows how to build Swing applications that run on all platforms.
+
+Specifically, it contains build scripts that will create a standard Mac OS X application.
+
+OSGiraffe uses the Eclipse Equinox framework (http://www.eclipse.org/equinox/). The source code does not specifically reference it, only the build files and configuration do.
+
+Instructions
+============
+To run the application from the command line, use:
+
+  ant run
+
+To build a version of the application for your platform, use:
+
+  ant dist-mac # For Mac OS X
+  ant dist # For all other platforms
+
+The application ends up in the "dist" folder.
+
+To clean out all build files:
+
+  ant clean

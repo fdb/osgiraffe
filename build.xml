@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OSGiraffe" default="dist">
+
+    <property file="version.properties"/>
+    <fail unless="app.version" message="File version.properties should specify app.version."/>
+
+    <property name="module.app" value="app"/>
+    <property name="module.demolusk" value="demolusk"/>
+    <property name="app.res.mac" value="app/platform/mac/res"/>
+    <property name="dist.mac" value="dist/mac/${ant.project.name}"/>
+    <property name="dist.mac.app" value="${dist.mac}/${ant.project.name}.app"/>
+    <property name="dist.mac.stub" location="${dist.mac.app}/Contents/MacOS/${ant.project.name}"/>
+    <property name="dist.mac.contents" location="${dist.mac.app}/Contents"/>
+    <property name="dist.mac.res" location="${dist.mac.contents}/Resources"/>
+    <property name="dist.mac.java" location="${dist.mac.res}"/>
+    <property name="apple.appstub" location="/System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
+
+    <target name="dist">
+        <ant dir="${module.app}" antfile="build.xml" target="dist"/>
+        <ant dir="${module.demolusk}" antfile="build.xml" target="dist"/>
+    </target>
+
+    <target name="clean">
+        <ant dir="${module.app}" antfile="build.xml" target="clean"/>
+        <ant dir="${module.demolusk}" antfile="build.xml" target="dist"/>
+    </target>
+
+    <target name="run" depends="prepare-run">
+        <java fork="true" classpath="lib/equinox.jar" classname="org.eclipse.core.runtime.adaptor.EclipseStarter">
+            <arg value="-console"/>
+            <arg value="-configuration app/res/configuration/config.ini"/>
+            <arg value="-data dist"/>
+            <arg value="-clean"/>
+        </java>
+    </target>
+    
+    <target name="dist-mac" depends="dist" description="Make a double-clickable Mac OS X application">
+        <mkdir dir="${dist.mac.app}"/>
+        <mkdir dir="${dist.mac.java}"/>
+        <!-- Copy library and program archives-->
+        <copy todir="${dist.mac.java}">
+            <fileset dir="lib">
+                <include name="*.jar"/>
+                <include name="*.zip"/>
+            </fileset>
+            <fileset dir="dist">
+                <include name="*.jar"/>
+                <include name="*.zip"/>
+            </fileset>
+        </copy>
+        <!-- Copy resources-->
+        <copy todir="${dist.mac.res}">
+            <fileset dir="app/res"/>
+        </copy>
+        <!-- Copy application stub -->
+        <copy file="${apple.appstub}" toFile="${dist.mac.stub}"/>
+        <!-- fix stub permissions -->
+        <chmod file="${dist.mac.stub}" perm="755"/>
+        <!-- copy additional Mac contents -->
+        <copy todir="${dist.mac.contents}">
+            <fileset dir="${app.res.mac}"/>
+        </copy>
+        <!-- Replace version number -->
+        <replace file="${dist.mac.contents}/Info.plist" token="@@VERSION@@" value="${app.version}"/>
+        <!-- Copy version number -->
+        <copy file="version.properties" todir="${dist.mac.res}" />
+        <!-- Make directory into a bundle -->
+        <exec executable="/Developer/Tools/SetFile">
+            <arg line="-a B ${dist.mac.app}"/>
+        </exec>
+    </target>
+    
+    <target name="run-mac" depends="dist-mac" description="Run the double-clickable application">
+        <!-- Use the exec task to open the application -->
+        <exec executable="/usr/bin/open" os="Mac OS X">
+            <arg line="${dist.mac.app}"/>
+        </exec>
+    </target>
+
+</project>

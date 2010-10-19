@@ -1,0 +1,12 @@
+Manifest-Version: 1
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: osgiraffe.app
+Bundle-Name: OSGiraffe Application
+Bundle-Version: 1.0.0
+Bundle-Activator: osgiraffe.app.Application
+Import-Package: org.osgi.framework,
+    javax.swing,
+    javax.swing.border,
+    javax.swing.event,
+    javax.swing.filechooser,
+    javax.imageio

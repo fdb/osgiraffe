@@ -1,0 +1,7 @@
+Manifest-Version: 1
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: osgiraffe.demolusk
+Bundle-Name: OSGiraffe Demolusk
+Bundle-Version: 1.0.0
+Bundle-Activator: osgiraffe.demolusk.DemoluskActivator
+Import-Package: org.osgi.framework

@@ -1,0 +1,3 @@
+* Mac: configuration folder is saved in the application bundle, which can give errors with users who are not admin.
+* Windows: create NSIS installer.
+* Linux: create DEB package.
