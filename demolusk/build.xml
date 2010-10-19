@@ -5,7 +5,7 @@
     <property name="res" value="res"/>
     <property name="lib" value="../lib"/>
     <property name="build" value="build"/>
-    <property name="dist" value="../dist"/>
+    <property name="dist.root" value="../dist"/>
 
     <path id="build.classpath">
         <path path="${lib}/equinox.jar"/>
@@ -20,13 +20,12 @@
     </target>
 
     <target name="dist" depends="compile">
-        <mkdir dir="${dist}"/>
-        <jar jarfile="${dist}/osgiraffe-demolusk.jar" basedir="${build}" manifest="manifest.mf"/>
+        <mkdir dir="${dist.root}"/>
+        <jar jarfile="${dist.root}/osgiraffe-demolusk.jar" basedir="${build}" manifest="manifest.mf"/>
     </target>
 
     <target name="clean">
         <delete dir="${build}"/>
-        <delete dir="${dist}"/>
     </target>
 
 </project>

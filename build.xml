@@ -7,6 +7,7 @@
     <property name="module.app" value="app"/>
     <property name="module.demolusk" value="demolusk"/>
     <property name="app.res.mac" value="app/platform/mac/res"/>
+    <property name="dist" value="dist"/>
     <property name="dist.mac" value="dist/mac/${ant.project.name}"/>
     <property name="dist.mac.app" value="${dist.mac}/${ant.project.name}.app"/>
     <property name="dist.mac.stub" location="${dist.mac.app}/Contents/MacOS/${ant.project.name}"/>
@@ -18,18 +19,24 @@
     <target name="dist">
         <ant dir="${module.app}" antfile="build.xml" target="dist"/>
         <ant dir="${module.demolusk}" antfile="build.xml" target="dist"/>
+        <mkdir dir="${dist}/configuration"/>
+        <copy todir="${dist}/configuration">
+            <fileset dir="app/res/configuration"/>
+        </copy>
+        <copy todir="${dist}">
+            <fileset dir="lib"/>
+        </copy>
     </target>
 
     <target name="clean">
         <ant dir="${module.app}" antfile="build.xml" target="clean"/>
-        <ant dir="${module.demolusk}" antfile="build.xml" target="dist"/>
+        <ant dir="${module.demolusk}" antfile="build.xml" target="clean"/>
+        <delete dir="${dist}"/>
     </target>
 
-    <target name="run" depends="prepare-run">
-        <java fork="true" classpath="lib/equinox.jar" classname="org.eclipse.core.runtime.adaptor.EclipseStarter">
+    <target name="run" depends="dist">
+        <java fork="true" dir="dist" classpath="dist/equinox.jar" classname="org.eclipse.core.runtime.adaptor.EclipseStarter">
             <arg value="-console"/>
-            <arg value="-configuration app/res/configuration/config.ini"/>
-            <arg value="-data dist"/>
             <arg value="-clean"/>
         </java>
     </target>
